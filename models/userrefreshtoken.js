@@ -10,7 +10,11 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+        UserRefreshToken.belongsTo(models.User, {
+            foreignKey: 'user_id',
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE',
+        });
     }
   }
   UserRefreshToken.init({
@@ -18,8 +22,9 @@ module.exports = (sequelize, DataTypes) => {
     refresh_token: DataTypes.STRING,
     expires_at: DataTypes.DATE
   }, {
-    sequelize,
-    modelName: 'UserRefreshToken',
+      modelName: 'UserRefreshToken',
+      tableName: 'UserRefreshTokens',
+      timestamps: false // createdAt/updatedAt 자동 컬럼 쓰는지에 따라 결정
   });
   return UserRefreshToken;
 };

@@ -14,7 +14,11 @@ module.exports = (sequelize, DataTypes) => {
         User.hasMany(models.ReviewLike, { foreignKey: 'user_id' });
         User.hasMany(models.Comment, { foreignKey: 'user_id'});
         User.hasMany(models.CommentLike, { foreignKey: 'user_id' });
-
+        User.hasMany(models.UserRefreshToken, {
+            foreignKey: 'user_id',
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE',
+        });
     }
   }
   User.init({
