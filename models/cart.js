@@ -10,7 +10,8 @@ module.exports = (sequelize, DataTypes) => {
             });
 
             Cart.hasMany(models.CartItem, {
-                foreignKey: 'cart_id'
+                foreignKey: 'cart_id',
+                onDelete: 'CASCADE'
             });
         }
     }
