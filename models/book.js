@@ -11,7 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
         Book.hasMany(models.Review, { foreignKey: 'book_id' });
-
+        Book.hasMany(models.Wishlist, {
+            foreignKey: 'book_id',
+            onDelete: 'CASCADE'
+        });
     }
   }
   Book.init({
