@@ -8,6 +8,11 @@ module.exports = (sequelize, DataTypes) => {
             Order.belongsTo(models.User, {
                 foreignKey: 'user_id'
             });
+            Order.hasMany(models.OrderItem, {
+                foreignKey: 'order_id',
+                onDelete: 'CASCADE'
+            });
+
         }
     }
   Order.init({

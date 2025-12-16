@@ -21,6 +21,11 @@ module.exports = (sequelize, DataTypes) => {
                 onUpdate: 'CASCADE',
             });
 
+            Book.hasMany(models.OrderItem, {
+                foreignKey: 'book_id'
+            });
+
+
 
         }
     }
