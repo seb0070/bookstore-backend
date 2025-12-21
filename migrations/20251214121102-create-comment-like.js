@@ -1,42 +1,35 @@
 'use strict';
-/** @type {import('sequelize-cli').Migration} */
+
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.createTable('CommentLikes', {
-            comment_id: {
-                type: Sequelize.INTEGER,
-                allowNull: false,
-                references: {
-                    model: 'Comments',
-                    key: 'id'
-                },
-                onDelete: 'CASCADE'
-            },
+        await queryInterface.createTable('comment_likes', {
             user_id: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
-                references: {
-                    model: 'Users',
-                    key: 'id'
-                },
-                onDelete: 'CASCADE'
+                references: { model: 'users', key: 'id' },
+                onDelete: 'CASCADE',
             },
-            createdAt: {
+            comment_id: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                references: { model: 'comments', key: 'id' },
+                onDelete: 'CASCADE',
+            },
+            created_at: {
                 allowNull: false,
                 type: Sequelize.DATE,
-                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
-            }
+                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+            },
         });
 
-        // ⭐ 복합 PK
-        await queryInterface.addConstraint('CommentLikes', {
-            fields: ['comment_id', 'user_id'],
+        await queryInterface.addConstraint('comment_likes', {
+            fields: ['user_id', 'comment_id'],
             type: 'primary key',
-            name: 'pk_comment_likes'
+            name: 'pk_comment_likes',
         });
     },
 
-    async down(queryInterface, Sequelize) {
-        await queryInterface.dropTable('CommentLikes');
-    }
+    async down(queryInterface) {
+        await queryInterface.dropTable('comment_likes');
+    },
 };

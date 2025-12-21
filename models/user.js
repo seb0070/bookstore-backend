@@ -1,45 +1,81 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-        User.hasMany(models.Review, { foreignKey: 'user_id' });
-        User.hasMany(models.ReviewLike, { foreignKey: 'user_id' });
-        User.hasMany(models.Comment, { foreignKey: 'user_id'});
-        User.hasMany(models.CommentLike, { foreignKey: 'user_id' });
-        User.hasMany(models.UserRefreshToken, {
-            foreignKey: 'user_id',
-            onDelete: 'CASCADE',
-            onUpdate: 'CASCADE',
-        });
-        User.hasMany(models.Wishlist, {
-            foreignKey: 'user_id',
-            onDelete: 'CASCADE'
-        });
-        User.hasMany(models.Cart, {
-            foreignKey: 'user_id',
-            onDelete: 'CASCADE'
-        });
-        User.hasMany(models.Order, {
-            foreignKey: 'user_id',
-            onDelete: 'CASCADE'
-        });
+    class User extends Model {
+        static associate(models) {
+            // associations는 나중에 연결
+            // User.hasMany(models.Book, { foreignKey: 'created_by' });
+        }
     }
-  }
-  User.init({
-    email: DataTypes.STRING,
-    password_hash: DataTypes.STRING,
-    name: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'User',
-  });
-  return User;
+
+    User.init(
+        {
+            id: {
+                type: DataTypes.INTEGER,
+                primaryKey: true,
+                autoIncrement: true,
+            },
+
+            email: {
+                type: DataTypes.STRING(255),
+                allowNull: false,
+                unique: true,
+                validate: {
+                    isEmail: true,
+                },
+            },
+
+            password_hash: {
+                type: DataTypes.STRING(255),
+                allowNull: false,
+            },
+
+            name: {
+                type: DataTypes.STRING(100),
+                allowNull: false,
+            },
+
+            birth_date: {
+                type: DataTypes.DATEONLY,
+            },
+
+            gender: {
+                type: DataTypes.ENUM('MALE', 'FEMALE', 'OTHER'),
+            },
+
+            phone_number: {
+                type: DataTypes.STRING(20),
+            },
+
+            address: {
+                type: DataTypes.STRING(255),
+            },
+
+            role: {
+                type: DataTypes.ENUM('USER', 'ADMIN'),
+                allowNull: false,
+                defaultValue: 'USER',
+            },
+
+            status: {
+                type: DataTypes.ENUM('ACTIVE', 'BLOCKED', 'DELETED'),
+                allowNull: false,
+                defaultValue: 'ACTIVE',
+            },
+
+            deleted_at: {
+                type: DataTypes.DATE,
+            },
+        },
+        {
+            sequelize,
+            modelName: 'User',
+            tableName: 'users',
+            underscored: true,   // ⭐ snake_case 핵심 옵션
+            timestamps: true,   // created_at / updated_at 자동
+        }
+    );
+
+    return User;
 };

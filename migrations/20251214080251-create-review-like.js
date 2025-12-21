@@ -1,42 +1,35 @@
 'use strict';
-/** @type {import('sequelize-cli').Migration} */
+
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.createTable('ReviewLikes', {
-            review_id: {
-                type: Sequelize.INTEGER,
-                allowNull: false,
-                references: {
-                    model: 'Reviews',
-                    key: 'id'
-                },
-                onDelete: 'CASCADE'
-            },
+        await queryInterface.createTable('review_likes', {
             user_id: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
-                references: {
-                    model: 'Users',
-                    key: 'id'
-                },
-                onDelete: 'CASCADE'
+                references: { model: 'users', key: 'id' },
+                onDelete: 'CASCADE',
             },
-            createdAt: {
+            review_id: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                references: { model: 'reviews', key: 'id' },
+                onDelete: 'CASCADE',
+            },
+            created_at: {
                 allowNull: false,
                 type: Sequelize.DATE,
-                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
-            }
+                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+            },
         });
 
-        // ⭐ 복합 PK
-        await queryInterface.addConstraint('ReviewLikes', {
-            fields: ['review_id', 'user_id'],
+        await queryInterface.addConstraint('review_likes', {
+            fields: ['user_id', 'review_id'],
             type: 'primary key',
-            name: 'pk_review_likes'
+            name: 'pk_review_likes',
         });
     },
 
-    async down(queryInterface, Sequelize) {
-        await queryInterface.dropTable('ReviewLikes');
-    }
+    async down(queryInterface) {
+        await queryInterface.dropTable('review_likes');
+    },
 };

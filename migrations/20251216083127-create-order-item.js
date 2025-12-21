@@ -1,49 +1,41 @@
 'use strict';
-/** @type {import('sequelize-cli').Migration} */
+
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.createTable('OrderItems', {
-            id: {
-                allowNull: false,
-                autoIncrement: true,
-                primaryKey: true,
-                type: Sequelize.INTEGER
-            },
+        await queryInterface.createTable('order_items', {
             order_id: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
-                references: {
-                    model: 'Orders',
-                    key: 'id'
-                },
-                onDelete: 'CASCADE'
+                references: { model: 'orders', key: 'id' },
+                onDelete: 'CASCADE',
             },
+
             book_id: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
-                references: {
-                    model: 'Books',
-                    key: 'id'
-                },
-                onDelete: 'RESTRICT'
+                references: { model: 'books', key: 'id' },
+                onDelete: 'RESTRICT',
             },
+
             quantity: {
                 type: Sequelize.INTEGER,
-                allowNull: false
-            },
-            unit_price: {
-                type: Sequelize.DECIMAL(10, 2),
-                allowNull: false
-            },
-            createdAt: {
                 allowNull: false,
-                type: Sequelize.DATE,
-                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
-            }
+            },
+
+            price: {
+                type: Sequelize.DECIMAL(10, 2),
+                allowNull: false,
+            },
+        });
+
+        await queryInterface.addConstraint('order_items', {
+            fields: ['order_id', 'book_id'],
+            type: 'primary key',
+            name: 'pk_order_items',
         });
     },
 
-    async down(queryInterface, Sequelize) {
-        await queryInterface.dropTable('OrderItems');
-    }
+    async down(queryInterface) {
+        await queryInterface.dropTable('order_items');
+    },
 };

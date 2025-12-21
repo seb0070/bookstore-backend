@@ -4,45 +4,90 @@ const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
     class Book extends Model {
         static associate(models) {
-            // Book(1) : Review(N)
-            Book.hasMany(models.Review, { foreignKey: 'book_id' });
-
-            // Book(1) : Wishlist(N)
-            Book.hasMany(models.Wishlist, {
-                foreignKey: 'book_id',
-                onDelete: 'CASCADE',
-                onUpdate: 'CASCADE',
+            Book.belongsTo(models.User, {
+                foreignKey: 'created_by',
+                as: 'creator',
             });
 
-            // Book(1) : CartItem(N)
-            Book.hasMany(models.CartItem, {
-                foreignKey: 'book_id',
-                onDelete: 'RESTRICT',
-                onUpdate: 'CASCADE',
-            });
-
-            Book.hasMany(models.OrderItem, {
-                foreignKey: 'book_id'
-            });
-
-
-
+            // Book.hasMany(models.Review, { foreignKey: 'book_id' });
+            // Book.hasMany(models.CartItem, { foreignKey: 'book_id' });
+            // Book.hasMany(models.OrderItem, { foreignKey: 'book_id' });
         }
     }
 
     Book.init(
         {
-            title: DataTypes.STRING,
-            description: DataTypes.TEXT,
-            price: DataTypes.DECIMAL,
-            stock_quantity: DataTypes.INTEGER,
-            status: DataTypes.STRING,
+            id: {
+                type: DataTypes.INTEGER,
+                primaryKey: true,
+                autoIncrement: true,
+            },
+
+            title: {
+                type: DataTypes.STRING(255),
+                allowNull: false,
+            },
+
+            description: {
+                type: DataTypes.TEXT,
+            },
+
+            isbn: {
+                type: DataTypes.STRING(50),
+                unique: true,
+            },
+
+            authors: {
+                type: DataTypes.JSON,
+                allowNull: false,
+                defaultValue: [],
+            },
+
+            categories: {
+                type: DataTypes.JSON,
+                allowNull: false,
+                defaultValue: [],
+            },
+
+            publisher: {
+                type: DataTypes.STRING(255),
+            },
+
+            published_year: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+            },
+
+            price: {
+                type: DataTypes.DECIMAL(10, 2),
+                allowNull: false,
+            },
+
+            stock_quantity: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                defaultValue: 0,
+                validate: {
+                    min: 0,
+                },
+            },
+
+            status: {
+                type: DataTypes.ENUM('ACTIVE', 'DELETED'),
+                allowNull: false,
+                defaultValue: 'ACTIVE',
+            },
+
+            deleted_at: {
+                type: DataTypes.DATE,
+            },
         },
         {
             sequelize,
             modelName: 'Book',
-            tableName: 'Books',
-            timestamps: true,
+            tableName: 'books',
+            underscored: true,   // ⭐ snake_case 핵심
+            timestamps: true,   // created_at / updated_at
         }
     );
 

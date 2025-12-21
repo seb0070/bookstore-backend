@@ -1,42 +1,41 @@
 'use strict';
-/** @type {import('sequelize-cli').Migration} */
+
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.createTable('Carts', {
+        await queryInterface.createTable('carts', {
             id: {
-                allowNull: false,
-                autoIncrement: true,
+                type: Sequelize.INTEGER,
                 primaryKey: true,
-                type: Sequelize.INTEGER
+                autoIncrement: true,
+                allowNull: false,
             },
+
             user_id: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
-                references: {
-                    model: 'Users',
-                    key: 'id'
-                },
+                unique: true,
+                references: { model: 'users', key: 'id' },
+                onUpdate: 'CASCADE',
                 onDelete: 'CASCADE',
-                onUpdate: 'CASCADE'
             },
-            status: {
-                type: Sequelize.STRING,
-                allowNull: false
-            },
-            createdAt: {
+
+            created_at: {
                 allowNull: false,
                 type: Sequelize.DATE,
-                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
             },
-            updatedAt: {
+
+            updated_at: {
                 allowNull: false,
                 type: Sequelize.DATE,
-                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
-            }
+                defaultValue: Sequelize.literal(
+                    'CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'
+                ),
+            },
         });
     },
 
     async down(queryInterface) {
-        await queryInterface.dropTable('Carts');
-    }
+        await queryInterface.dropTable('carts');
+    },
 };

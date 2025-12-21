@@ -2,48 +2,58 @@
 
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.createTable('Orders', {
+        await queryInterface.createTable('orders', {
             id: {
-                allowNull: false,
-                autoIncrement: true,
+                type: Sequelize.INTEGER,
                 primaryKey: true,
-                type: Sequelize.INTEGER
+                autoIncrement: true,
+                allowNull: false,
             },
 
             user_id: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
-                references: {
-                    model: 'Users',
-                    key: 'id'
-                },
-                onDelete: 'CASCADE',
-                onUpdate: 'CASCADE'
-            },
-
-            total_amount: {
-                type: Sequelize.DECIMAL(10, 2),
-                allowNull: false
+                references: { model: 'users', key: 'id' },
+                onDelete: 'RESTRICT',
             },
 
             status: {
-                type: Sequelize.STRING,
-                allowNull: false
+                type: Sequelize.ENUM(
+                    'PENDING',
+                    'PAID',
+                    'SHIPPED',
+                    'COMPLETED',
+                    'CANCELLED'
+                ),
+                allowNull: false,
+                defaultValue: 'PENDING',
             },
 
-            createdAt: {
+            total_price: {
+                type: Sequelize.DECIMAL(10, 2),
                 allowNull: false,
-                type: Sequelize.DATE
             },
 
-            updatedAt: {
+            created_at: {
                 allowNull: false,
-                type: Sequelize.DATE
-            }
+                type: Sequelize.DATE,
+                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+            },
+
+            updated_at: {
+                allowNull: false,
+                type: Sequelize.DATE,
+                defaultValue: Sequelize.literal(
+                    'CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'
+                ),
+            },
         });
+
+        await queryInterface.addIndex('orders', ['user_id'], { name: 'idx_orders_user' });
+        await queryInterface.addIndex('orders', ['status'], { name: 'idx_orders_status' });
     },
 
     async down(queryInterface) {
-        await queryInterface.dropTable('Orders');
-    }
+        await queryInterface.dropTable('orders');
+    },
 };

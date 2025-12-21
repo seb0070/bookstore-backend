@@ -1,58 +1,43 @@
 'use strict';
-/** @type {import('sequelize-cli').Migration} */
+
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.createTable('CartItems', {
-            id: {
-                allowNull: false,
-                autoIncrement: true,
-                primaryKey: true,
-                type: Sequelize.INTEGER
-            },
-
+        await queryInterface.createTable('cart_items', {
             cart_id: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
-                references: {
-                    model: 'Carts',
-                    key: 'id'
-                },
-                onDelete: 'CASCADE'
+                references: { model: 'carts', key: 'id' },
+                onDelete: 'CASCADE',
             },
 
             book_id: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
-                references: {
-                    model: 'Books',
-                    key: 'id'
-                },
-                onDelete: 'RESTRICT'
+                references: { model: 'books', key: 'id' },
+                onDelete: 'RESTRICT',
             },
 
             quantity: {
                 type: Sequelize.INTEGER,
-                allowNull: false
-            },
-
-            unit_price: {
-                type: Sequelize.DECIMAL(10, 2),
-                allowNull: false
-            },
-
-            createdAt: {
                 allowNull: false,
-                type: Sequelize.DATE
+                defaultValue: 1,
             },
 
-            updatedAt: {
+            created_at: {
                 allowNull: false,
-                type: Sequelize.DATE
-            }
+                type: Sequelize.DATE,
+                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+            },
+        });
+
+        await queryInterface.addConstraint('cart_items', {
+            fields: ['cart_id', 'book_id'],
+            type: 'primary key',
+            name: 'pk_cart_items',
         });
     },
 
-    async down(queryInterface, Sequelize) {
-        await queryInterface.dropTable('CartItems');
-    }
+    async down(queryInterface) {
+        await queryInterface.dropTable('cart_items');
+    },
 };

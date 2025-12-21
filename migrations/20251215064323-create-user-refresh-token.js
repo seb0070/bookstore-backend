@@ -1,45 +1,46 @@
 'use strict';
-/** @type {import('sequelize-cli').Migration} */
+
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.createTable('UserRefreshTokens', {
+        await queryInterface.createTable('user_refresh_tokens', {
             id: {
-                allowNull: false,
-                autoIncrement: true,
+                type: Sequelize.INTEGER,
                 primaryKey: true,
-                type: Sequelize.INTEGER
+                autoIncrement: true,
+                allowNull: false,
             },
+
             user_id: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
-                references: {
-                    model: 'Users',
-                    key: 'id'
-                },
-                onDelete: 'CASCADE',   // 유저 삭제 시 토큰도 삭제
-                onUpdate: 'CASCADE'
+                references: { model: 'users', key: 'id' },
+                onDelete: 'CASCADE',
             },
+
             refresh_token: {
-                type: Sequelize.STRING,
-                allowNull: false
+                type: Sequelize.STRING(500),
+                allowNull: false,
+                unique: true,
             },
+
             expires_at: {
                 type: Sequelize.DATE,
-                allowNull: false
+                allowNull: false,
             },
-            createdAt: {
+
+            created_at: {
                 allowNull: false,
                 type: Sequelize.DATE,
-                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
             },
-            updatedAt: {
-                allowNull: false,
-                type: Sequelize.DATE
-            }
+        });
+
+        await queryInterface.addIndex('user_refresh_tokens', ['user_id'], {
+            name: 'idx_refresh_tokens_user',
         });
     },
 
     async down(queryInterface) {
-        await queryInterface.dropTable('UserRefreshTokens');
-    }
+        await queryInterface.dropTable('user_refresh_tokens');
+    },
 };
