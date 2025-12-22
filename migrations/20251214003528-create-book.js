@@ -28,15 +28,12 @@ module.exports = {
             },
 
             authors: {
-                type: Sequelize.JSON,
+                type: Sequelize.TEXT,
                 allowNull: false,
-                defaultValue: Sequelize.literal('(JSON_ARRAY())'),
             },
-
             categories: {
-                type: Sequelize.JSON,
+                type: Sequelize.TEXT,
                 allowNull: false,
-                defaultValue: Sequelize.literal('(JSON_ARRAY())'),
             },
 
             publisher: {
@@ -97,7 +94,7 @@ module.exports = {
             },
         });
 
-        // 🔍 검색/정렬 성능 인덱스
+        // 검색/정렬 성능 인덱스
         await queryInterface.addIndex('books', ['title'], {
             name: 'idx_books_title',
         });
