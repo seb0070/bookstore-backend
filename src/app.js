@@ -7,7 +7,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/api/auth', require('./routes/auth.routes'));
 app.use('/api/books', bookRoutes);
-app.use(errorMiddleware);
 
 app.get('/health', (req, res) => {
     res.status(200).json({
@@ -15,5 +14,7 @@ app.get('/health', (req, res) => {
         version: '1.0.0',
     });
 });
+
+app.use(errorMiddleware);
 
 module.exports = app;
