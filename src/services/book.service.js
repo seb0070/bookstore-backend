@@ -1,8 +1,44 @@
+const { Op } = require('sequelize');
 const { Book } = require('../models');
 
-// 전체 조회
-exports.getBooks = async () => {
-    return await Book.findAll();
+// 전체 조회 (페이지네이션 / 검색 / 정렬)
+exports.getBooks = async (query) => {
+    const page = parseInt(query.page ?? 0, 10);
+    const size = Math.min(parseInt(query.size ?? 20, 10), 50);
+
+    const [sortField = 'created_at', sortOrder = 'DESC'] =
+        (query.sort ?? 'created_at,DESC').split(',');
+
+    const where = {
+        status: 'ACTIVE',
+    };
+
+    if (query.keyword) {
+        where[Op.or] = [
+            { title: { [Op.like]: `%${query.keyword}%` } },
+            { description: { [Op.like]: `%${query.keyword}%` } },
+        ];
+    }
+
+    const { rows, count } = await Book.findAndCountAll({
+        where,
+        limit: size,
+        offset: page * size,
+        order: [[sortField, sortOrder.toUpperCase()]],
+    });
+
+    return {
+        content: rows.map((b) => ({
+            ...b.toJSON(),
+            authors: JSON.parse(b.authors),
+            categories: JSON.parse(b.categories),
+        })),
+        page,
+        size,
+        totalElements: count,
+        totalPages: Math.ceil(count / size),
+        sort: `${sortField},${sortOrder.toUpperCase()}`,
+    };
 };
 
 // 단건 조회

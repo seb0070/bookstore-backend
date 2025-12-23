@@ -2,8 +2,8 @@ const bookService = require('../services/book.service');
 
 exports.getBooks = async (req, res, next) => {
     try {
-        const books = await bookService.getBooks();
-        res.status(200).json(books);
+        const result = await bookService.getBooks(req.query);
+        res.status(200).json(result);
     } catch (error) {
         next(error);
     }
