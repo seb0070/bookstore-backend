@@ -22,3 +22,5 @@ Thumbs.db
 
 # Sequelize
 sequelize.log
+
+.idea/workspace.xml
