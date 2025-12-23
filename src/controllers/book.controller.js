@@ -32,3 +32,19 @@ exports.createBook = async (req, res, next) => {
 
 };
 
+// PATCH /api/books/:id
+exports.updateBook = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const book = await bookService.updateBook(id, req.body);
+
+        res.status(200).json({
+            ...book.toJSON(),
+            authors: JSON.parse(book.authors),
+            categories: JSON.parse(book.categories),
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+

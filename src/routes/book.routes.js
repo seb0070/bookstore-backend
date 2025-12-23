@@ -10,5 +10,6 @@ router.get('/books/:id', bookController.getBookById);
 // 생성
 router.post('/books', bookController.createBook);
 
+router.patch('/:id', bookController.updateBook);
 
 module.exports = router;

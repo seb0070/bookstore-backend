@@ -49,3 +49,50 @@ exports.createBook = async (data) => {
     });
 
 };
+
+// 수정
+exports.updateBook = async (id, data) => {
+    const book = await Book.findByPk(id);
+
+    if (!book) {
+        const error = new Error('BOOK_NOT_FOUND');
+        error.status = 404;
+        throw error;
+    }
+
+    const {
+        title,
+        description,
+        authors,
+        categories,
+        price,
+        published_year,
+        stock_quantity,
+        status,
+    } = data;
+
+    if (authors && !Array.isArray(authors)) {
+        const error = new Error('INVALID_AUTHORS');
+        error.status = 400;
+        throw error;
+    }
+
+    if (categories && !Array.isArray(categories)) {
+        const error = new Error('INVALID_CATEGORIES');
+        error.status = 400;
+        throw error;
+    }
+
+    await book.update({
+        title: title ?? book.title,
+        description: description ?? book.description,
+        authors: authors ? JSON.stringify(authors) : book.authors,
+        categories: categories ? JSON.stringify(categories) : book.categories,
+        price: price ?? book.price,
+        published_year: published_year ?? book.published_year,
+        stock_quantity: stock_quantity ?? book.stock_quantity,
+        status: status ?? book.status,
+    });
+
+    return book;
+};
