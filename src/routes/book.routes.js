@@ -10,12 +10,24 @@ router.get('/', bookController.getBooks);
 router.get('/:id', bookController.getBookById);
 
 // 생성
-router.post('/books', authenticate, authorize(['ROLE_ADMIN']), bookController.createBook);
-
+router.post(
+    '/',
+    authenticate,
+    authorize(['ROLE_ADMIN']),
+    bookController.createBook
+);
 // 수정
-router.patch('/:id', bookController.updateBook);
-
+router.patch(
+    '/:id',
+    authenticate,
+    authorize(['ROLE_ADMIN']),
+    bookController.updateBook
+);
 // 삭제
-router.delete('/:id', bookController.deleteBook);
-
+router.delete(
+    '/:id',
+    authenticate,
+    authorize(['ROLE_ADMIN']),
+    bookController.deleteBook
+);
 module.exports = router;
