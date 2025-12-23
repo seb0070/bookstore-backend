@@ -96,3 +96,27 @@ exports.updateBook = async (id, data) => {
 
     return book;
 };
+
+// 삭제 (soft delete)
+exports.deleteBook = async (id) => {
+    const book = await Book.findByPk(id);
+
+    if (!book) {
+        const error = new Error('BOOK_NOT_FOUND');
+        error.status = 404;
+        throw error;
+    }
+
+    if (book.status === 'DELETED') {
+        const error = new Error('BOOK_ALREADY_DELETED');
+        error.status = 409;
+        throw error;
+    }
+
+    await book.update({
+        status: 'DELETED',
+        deleted_at: new Date(),
+    });
+
+    return book;
+};

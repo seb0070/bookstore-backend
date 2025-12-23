@@ -48,3 +48,16 @@ exports.updateBook = async (req, res, next) => {
     }
 };
 
+// DELETE /api/books/:id
+exports.deleteBook = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        await bookService.deleteBook(id);
+
+        res.status(204).send(); // No Content
+    } catch (error) {
+        next(error);
+    }
+};
+
+
