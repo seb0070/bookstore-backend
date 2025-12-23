@@ -22,3 +22,10 @@ exports.authorize = (roles = []) => (req, res, next) => {
     }
     next();
 };
+
+exports.requireAdmin = (req, res, next) => {
+    if (req.user.role !== 'ADMIN') {
+        return res.status(403).json({ code: 'FORBIDDEN' });
+    }
+    next();
+};
