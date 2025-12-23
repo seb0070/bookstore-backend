@@ -22,10 +22,13 @@ exports.getBookById = async (req, res, next) => {
 
 // POST /api/books
 exports.createBook = async (req, res, next) => {
-    try {
-        const book = await bookService.createBook(req.body);
-        res.status(201).json(book);
-    } catch (error) {
-        next(error);
-    }
+    const book = await bookService.createBook(req.body);
+
+    res.json({
+        ...book.toJSON(),
+        authors: JSON.parse(book.authors),
+        categories: JSON.parse(book.categories),
+    });
+
 };
+

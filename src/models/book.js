@@ -40,13 +40,11 @@ module.exports = (sequelize, DataTypes) => {
             authors: {
                 type: DataTypes.TEXT,
                 allowNull: false,
-                defaultValue: [],
             },
 
             categories: {
                 type: DataTypes.TEXT,
                 allowNull: false,
-                defaultValue: [],
             },
 
             publisher: {

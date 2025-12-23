@@ -39,12 +39,13 @@ exports.createBook = async (data) => {
     return await Book.create({
         title,
         description,
-        authors,
-        categories,
+        authors: JSON.stringify(authors),
+        categories: JSON.stringify(categories),
         price,
         published_year,
         status: 'ACTIVE',
         stock_quantity: 0,
-        created_by: 1, // 임시 (나중에 JWT에서 가져옴)
+        created_by: 1,
     });
+
 };
