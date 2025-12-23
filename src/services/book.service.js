@@ -39,8 +39,8 @@ exports.createBook = async (data) => {
     return await Book.create({
         title,
         description,
-        authors: JSON.stringify(authors),       // ⭐ 중요
-        categories: JSON.stringify(categories), // ⭐ 중요
+        authors,
+        categories,
         price,
         published_year,
         status: 'ACTIVE',
