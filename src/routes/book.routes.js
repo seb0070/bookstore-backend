@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const bookController = require('../controllers/book.controller');
 const { authenticate, authorize } = require('../middlewares/auth.middleware');
+const validateBody = require('../middlewares/validate.middleware');
+const { createBookSchema } = require('../validators/book.validator');
 
 // 전체 조회
 router.get('/', bookController.getBooks);
@@ -14,6 +16,7 @@ router.post(
     '/',
     authenticate,
     authorize(['ROLE_ADMIN']),
+    validateBody(createBookSchema),
     bookController.createBook
 );
 // 수정
