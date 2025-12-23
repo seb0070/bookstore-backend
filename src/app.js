@@ -4,6 +4,9 @@ const app = express();
 const bookRoutes = require('./routes/book.routes');
 
 app.use(express.json());
+
+app.use('/api/auth', require('./routes/auth.routes'));
+
 app.use('/api/books', bookRoutes);
 
 app.get('/health', (req, res) => {

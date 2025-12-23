@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bookController = require('../controllers/book.controller');
+const { authenticate, authorize } = require('../middlewares/auth.middleware');
 
 // 전체 조회
 router.get('/', bookController.getBooks);
@@ -9,7 +10,7 @@ router.get('/', bookController.getBooks);
 router.get('/:id', bookController.getBookById);
 
 // 생성
-router.post('/', bookController.createBook);
+router.post('/books', authenticate, authorize(['ROLE_ADMIN']), bookController.createBook);
 
 // 수정
 router.patch('/:id', bookController.updateBook);
