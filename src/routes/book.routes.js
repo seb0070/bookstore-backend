@@ -101,7 +101,7 @@ router.get('/:id', bookController.getBookById);
 router.post(
     '/',
     authenticate,
-    authorize(['ROLE_ADMIN']),
+    authorize(['ADMIN']),
     validateBody(createBookSchema),
     bookController.createBook
 );
@@ -161,7 +161,7 @@ router.post(
 router.patch(
     '/:id',
     authenticate,
-    authorize(['ROLE_ADMIN']),
+    authorize(['ADMIN']),
     bookController.updateBook
 );
 
@@ -193,7 +193,7 @@ router.patch(
 router.delete(
     '/:id',
     authenticate,
-    authorize(['ROLE_ADMIN']),
+    authorize(['ADMIN']),
     bookController.deleteBook
 );
 module.exports = router;
