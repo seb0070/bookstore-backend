@@ -38,13 +38,13 @@ module.exports = (sequelize, DataTypes) => {
             },
 
             authors: {
-                type: DataTypes.JSON,
+                type: DataTypes.TEXT,
                 allowNull: false,
                 defaultValue: [],
             },
 
             categories: {
-                type: DataTypes.JSON,
+                type: DataTypes.TEXT,
                 allowNull: false,
                 defaultValue: [],
             },
