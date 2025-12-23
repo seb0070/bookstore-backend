@@ -28,12 +28,27 @@ module.exports = {
             },
 
             authors: {
-                type: Sequelize.TEXT,
+                type: DataTypes.TEXT,
                 allowNull: false,
+                get() {
+                    const raw = this.getDataValue('authors');
+                    return raw ? JSON.parse(raw) : [];
+                },
+                set(value) {
+                    this.setDataValue('authors', JSON.stringify(value));
+                },
             },
+
             categories: {
-                type: Sequelize.TEXT,
+                type: DataTypes.TEXT,
                 allowNull: false,
+                get() {
+                    const raw = this.getDataValue('categories');
+                    return raw ? JSON.parse(raw) : [];
+                },
+                set(value) {
+                    this.setDataValue('categories', JSON.stringify(value));
+                },
             },
 
             publisher: {
