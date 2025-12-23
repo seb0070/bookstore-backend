@@ -29,3 +29,9 @@ exports.deactivateUser = async (req, res) => {
     await userService.deactivateUser(req.params.id);
     res.status(204).end();
 };
+
+exports.getMe = async (req, res) => {
+    res.status(200).json(req.user);
+};
+
+

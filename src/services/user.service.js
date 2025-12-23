@@ -58,13 +58,20 @@ exports.getUserById = async (id) => {
     return user;
 };
 
-exports.deactivateUser = async (id) => {
-    const user = await User.findByPk(id);
+exports.deactivateUser = async (userId) => {
+    const user = await User.findByPk(userId);
+
     if (!user) {
         const error = new Error('USER_NOT_FOUND');
         error.status = 404;
         throw error;
     }
 
-    await user.update({ status: 'INACTIVE' });
+    if (user.status === 'DELETED') {
+        const error = new Error('STATE_CONFLICT');
+        error.status = 409;
+        throw error;
+    }
+
+    await user.update({ status: 'BLOCKED' });
 };

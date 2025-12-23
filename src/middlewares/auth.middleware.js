@@ -17,6 +17,11 @@ exports.authenticate = (req, res, next) => {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.user = decoded; // { id, role }
+
+        if (req.user.status !== 'ACTIVE') {
+            return res.status(403).json({ code: 'USER_BLOCKED' });
+        }
+
         next();
     } catch (err) {
         const error = new Error('TOKEN_EXPIRED');
