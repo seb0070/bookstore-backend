@@ -1,18 +1,21 @@
-const { Op } = require('sequelize');
 const { Book } = require('../models');
+const { Op } = require('sequelize');
 
-// 전체 조회 (페이지네이션 / 검색 / 정렬)
+// 전체 조회 (페이지네이션 + 검색 + 정렬)
 exports.getBooks = async (query) => {
-    const page = parseInt(query.page ?? 0, 10);
-    const size = Math.min(parseInt(query.size ?? 20, 10), 50);
+    const page = parseInt(query.page, 10) || 0;
+    const size = parseInt(query.size, 10) || 10;
+    const offset = page * size;
 
-    const [sortField = 'created_at', sortOrder = 'DESC'] =
-        (query.sort ?? 'created_at,DESC').split(',');
+    // 정렬
+    let order = [['created_at', 'DESC']];
+    if (query.sort) {
+        const [field, direction] = query.sort.split(',');
+        order = [[field, direction.toUpperCase()]];
+    }
 
-    const where = {
-        status: 'ACTIVE',
-    };
-
+    // 검색 조건
+    const where = {};
     if (query.keyword) {
         where[Op.or] = [
             { title: { [Op.like]: `%${query.keyword}%` } },
@@ -20,26 +23,23 @@ exports.getBooks = async (query) => {
         ];
     }
 
-    const { rows, count } = await Book.findAndCountAll({
+    const { count, rows } = await Book.findAndCountAll({
         where,
         limit: size,
-        offset: page * size,
-        order: [[sortField, sortOrder.toUpperCase()]],
+        offset,
+        order,
     });
 
     return {
-        content: rows.map((b) => ({
-            ...b.toJSON(),
-            authors: JSON.parse(b.authors),
-            categories: JSON.parse(b.categories),
-        })),
+        content: rows,
         page,
         size,
         totalElements: count,
         totalPages: Math.ceil(count / size),
-        sort: `${sortField},${sortOrder.toUpperCase()}`,
+        sort: query.sort || 'created_at,DESC',
     };
 };
+
 
 // 단건 조회
 exports.getBookById = async (id) => {
