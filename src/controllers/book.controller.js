@@ -8,3 +8,24 @@ exports.getBooks = async (req, res, next) => {
         next(error);
     }
 };
+
+// GET /api/books/:id
+exports.getBookById = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const book = await bookService.getBookById(id);
+        res.status(200).json(book);
+    } catch (error) {
+        next(error);
+    }
+};
+
+// POST /api/books
+exports.createBook = async (req, res, next) => {
+    try {
+        const book = await bookService.createBook(req.body);
+        res.status(201).json(book);
+    } catch (error) {
+        next(error);
+    }
+};

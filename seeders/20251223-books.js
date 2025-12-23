@@ -11,6 +11,7 @@ module.exports = {
                 authors: [`저자${i}`],
                 categories: ['TEST'],
                 price: 10000 + i * 500,
+                published_year: 2000 + (i % 20),
                 status: 'ACTIVE',
                 stock_quantity: 100,
                 created_by: 1,
