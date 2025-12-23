@@ -3,40 +3,37 @@ const { Op } = require('sequelize');
 
 // 전체 조회 (페이지네이션 + 검색 + 정렬)
 exports.getBooks = async (query) => {
-    const page = parseInt(query.page, 10) || 0;
-    const size = parseInt(query.size, 10) || 10;
-    const offset = page * size;
+    const {
+        page = 1,
+        limit = 10,
+        sort = 'created_at',
+        order = 'DESC',
+        keyword,
+    } = query;
 
-    // 정렬
-    let order = [['created_at', 'DESC']];
-    if (query.sort) {
-        const [field, direction] = query.sort.split(',');
-        order = [[field, direction.toUpperCase()]];
-    }
+    const offset = (page - 1) * limit;
 
-    // 검색 조건
     const where = {};
-    if (query.keyword) {
-        where[Op.or] = [
-            { title: { [Op.like]: `%${query.keyword}%` } },
-            { description: { [Op.like]: `%${query.keyword}%` } },
-        ];
+
+    if (keyword) {
+        where.title = {
+            [Op.like]: `%${keyword}%`,
+        };
     }
 
-    const { count, rows } = await Book.findAndCountAll({
+    const { rows, count } = await Book.findAndCountAll({
         where,
-        limit: size,
-        offset,
-        order,
+        limit: Number(limit),
+        offset: Number(offset),
+        order: [[sort, order]],
     });
 
     return {
         content: rows,
-        page,
-        size,
+        page: Number(page),
+        limit: Number(limit),
         totalElements: count,
-        totalPages: Math.ceil(count / size),
-        sort: query.sort || 'created_at,DESC',
+        totalPages: Math.ceil(count / limit),
     };
 };
 
