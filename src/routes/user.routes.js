@@ -2,8 +2,14 @@ const router = require('express').Router();
 const controller = require('../controllers/user.controller');
 const { authenticate, authorize } = require('../middlewares/auth.middleware');
 const validate = require('../middlewares/validate.middleware');
-const { createUserSchema, updateMeSchema } = require('../schemas/user.schema');
-const { validateBody } = require('../middlewares/validate.middleware');
+const {
+    createUserSchema,
+    updateMeSchema,
+} = require('../schemas/user.schema');
+
+const {
+    updateUserStatusSchema,
+} = require('../validators/user.validator');
 
 // 회원가입
 router.post('/', validate(createUserSchema), controller.createUser);
@@ -20,7 +26,7 @@ router.patch(
     '/:id/status',
     authenticate,
     authorize(['ADMIN']),
-    validateBody(updateUserStatusSchema),
+    validate(updateUserStatusSchema),
     controller.updateUserStatus
 );
 module.exports = router;

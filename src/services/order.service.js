@@ -22,7 +22,7 @@ exports.createOrder = async (userId, items) => {
 
         // 2️⃣ 아이템 처리
         for (const item of items) {
-            const book = await Book.findByPk(item.bookId, {
+            const book = await Book.findByPk(item.book_id, {
                 transaction: t,
             });
 
