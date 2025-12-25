@@ -1,59 +1,49 @@
-const reviewService = require('../services/review.service');
+const commentService = require('../services/comment.service');
 
-exports.createReview = async (req, res, next) => {
+exports.createComment = async (req, res, next) => {
     try {
-        const { bookId } = req.params;
-        const review = await reviewService.createReview(req.user.id, bookId, req.body);
-        res.status(201).json(review);
+        const { reviewId } = req.params;
+        const comment = await commentService.createComment(req.user.id, reviewId, req.body);
+        res.status(201).json(comment);
     } catch (err) {
         next(err);
     }
 };
 
-exports.getBookReviews = async (req, res, next) => {
+exports.getReviewComments = async (req, res, next) => {
     try {
-        const { bookId } = req.params;
-        const reviews = await reviewService.getBookReviews(bookId, req.query);
-        res.status(200).json(reviews);
+        const { reviewId } = req.params;
+        const comments = await commentService.getReviewComments(reviewId, req.query);
+        res.status(200).json(comments);
     } catch (err) {
         next(err);
     }
 };
 
-exports.getReviewById = async (req, res, next) => {
+exports.updateComment = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const review = await reviewService.getReviewById(id);
-        res.status(200).json(review);
+        const comment = await commentService.updateComment(id, req.user.id, req.body);
+        res.status(200).json(comment);
     } catch (err) {
         next(err);
     }
 };
 
-exports.updateReview = async (req, res, next) => {
+exports.deleteComment = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const review = await reviewService.updateReview(id, req.user.id, req.body);
-        res.status(200).json(review);
+        await commentService.deleteComment(id, req.user.id);
+        res.status(200).json({ message: '댓글이 삭제되었습니다.' });
     } catch (err) {
         next(err);
     }
 };
 
-exports.deleteReview = async (req, res, next) => {
+exports.getMyComments = async (req, res, next) => {
     try {
-        const { id } = req.params;
-        await reviewService.deleteReview(id, req.user.id);
-        res.status(200).json({ message: '리뷰가 삭제되었습니다.' });
-    } catch (err) {
-        next(err);
-    }
-};
-
-exports.getMyReviews = async (req, res, next) => {
-    try {
-        const reviews = await reviewService.getMyReviews(req.user.id, req.query);
-        res.status(200).json(reviews);
+        const comments = await commentService.getMyComments(req.user.id, req.query);
+        res.status(200).json(comments);
     } catch (err) {
         next(err);
     }

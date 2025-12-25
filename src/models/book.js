@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
                 as: 'orderItems'
             });
             Book.belongsToMany(models.User, {
-                through: models.Wishlist,
+                through: 'Wishlist',  // 문자열로 변경!
                 foreignKey: 'book_id',
                 otherKey: 'user_id',
                 as: 'wishlistedBy'

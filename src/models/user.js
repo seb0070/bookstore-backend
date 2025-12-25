@@ -30,23 +30,24 @@ module.exports = (sequelize, DataTypes) => {
                 as: 'refreshTokens'
             });
             User.belongsToMany(models.Book, {
-                through: models.Wishlist,
+                through: 'Wishlist',  // 문자열!
                 foreignKey: 'user_id',
                 otherKey: 'book_id',
                 as: 'wishlist'
             });
             User.belongsToMany(models.Review, {
-                through: models.ReviewLike,
+                through: 'ReviewLike',  // 문자열!
                 foreignKey: 'user_id',
                 otherKey: 'review_id',
                 as: 'likedReviews'
             });
             User.belongsToMany(models.Comment, {
-                through: models.CommentLike,
+                through: 'CommentLike',  // 문자열!
                 foreignKey: 'user_id',
                 otherKey: 'comment_id',
                 as: 'likedComments'
             });
+
         }
     }
 

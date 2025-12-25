@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Swagger
 const swaggerUi = require('swagger-ui-express');
-const swaggerSpec = require('./config/swagger');
+const swaggerSpec = require('../docs/swagger');
 
 // Routes
 const authRoutes = require('./routes/auth.routes');
