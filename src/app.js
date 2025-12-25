@@ -6,7 +6,9 @@ const helmet = require('helmet');
 const app = express();
 
 // 기본 미들웨어
-app.use(helmet());
+app.use(helmet({
+    contentSecurityPolicy: false,  // ← 이 부분 추가!
+}));
 app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
