@@ -2,22 +2,22 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-    class OrderItem extends Model {
+    class Wishlist extends Model {
         static associate(models) {
-            OrderItem.belongsTo(models.Order, {
-                foreignKey: 'order_id',
-                as: 'order'
+            Wishlist.belongsTo(models.User, {
+                foreignKey: 'user_id',
+                as: 'user'
             });
-            OrderItem.belongsTo(models.Book, {
+            Wishlist.belongsTo(models.Book, {
                 foreignKey: 'book_id',
                 as: 'book'
             });
         }
     }
 
-    OrderItem.init(
+    Wishlist.init(
         {
-            order_id: {
+            user_id: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
                 primaryKey: true,
@@ -27,15 +27,6 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
                 primaryKey: true,
             },
-            quantity: {
-                type: DataTypes.INTEGER,
-                allowNull: false,
-                validate: { min: 1 },
-            },
-            price: {
-                type: DataTypes.DECIMAL(10, 2),
-                allowNull: false,
-            },
             created_at: {
                 type: DataTypes.DATE,
                 allowNull: false,
@@ -44,12 +35,12 @@ module.exports = (sequelize, DataTypes) => {
         },
         {
             sequelize,
-            modelName: 'OrderItem',
-            tableName: 'order_items',
+            modelName: 'Wishlist',
+            tableName: 'wishlists',
+            timestamps: false,
             underscored: true,
-            timestamps: false, // created_at만 수동 관리
         }
     );
 
-    return OrderItem;
+    return Wishlist;
 };

@@ -127,13 +127,7 @@ exports.createBook = async (data, createdBy) => {
         created_by: createdBy
     });
 
-    // JSON 필드 파싱하여 반환
-    const bookData = book.toJSON();
-    return {
-        ...bookData,
-        authors: JSON.parse(bookData.authors),
-        categories: JSON.parse(bookData.categories)
-    };
+    return book;
 };
 
 exports.updateBook = async (id, data) => {
@@ -187,13 +181,7 @@ exports.updateBook = async (id, data) => {
         cover_image: cover_image ?? book.cover_image
     });
 
-    // JSON 필드 파싱하여 반환
-    const bookData = book.toJSON();
-    return {
-        ...bookData,
-        authors: JSON.parse(bookData.authors),
-        categories: JSON.parse(bookData.categories)
-    };
+    return book;
 };
 
 exports.deleteBook = async (id) => {
