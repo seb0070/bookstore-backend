@@ -7,10 +7,10 @@ exports.getBookStats = async () => {
     const topBooks = await Review.findAll({
         attributes: [
             'book_id',
-            [sequelize.fn('AVG', sequelize.col('rating')), 'avg_rating'],
-            [sequelize.fn('COUNT', sequelize.col('id')), 'review_count']
+            [sequelize.fn('AVG', sequelize.col('Review.rating')), 'avg_rating'],  // Review. 추가
+            [sequelize.fn('COUNT', sequelize.col('Review.id')), 'review_count']   // Review. 추가
         ],
-        group: ['book_id'],
+        group: ['book_id', 'book.id'],  // book.id 추가
         order: [[sequelize.literal('avg_rating'), 'DESC']],
         limit: 10,
         include: [{
@@ -40,9 +40,9 @@ exports.getUserStats = async () => {
     const topReviewers = await Review.findAll({
         attributes: [
             'user_id',
-            [sequelize.fn('COUNT', sequelize.col('id')), 'review_count']
+            [sequelize.fn('COUNT', sequelize.col('Review.id')), 'review_count']  // Review. 추가
         ],
-        group: ['user_id'],
+        group: ['user_id', 'user.id'],  // user.id 추가
         order: [[sequelize.literal('review_count'), 'DESC']],
         limit: 10,
         include: [{
