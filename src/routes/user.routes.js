@@ -2,8 +2,7 @@ const router = require('express').Router();
 const controller = require('../controllers/user.controller');
 const { authenticate, authorize } = require('../middlewares/auth.middleware');
 const validate = require('../middlewares/validate.middleware');
-const { updateMeSchema } = require('../schemas/user.schema');
-const { updateUserStatusSchema } = require('../validators/user.validator');
+const { updateMeSchema, updateUserStatusSchema } = require('../validators/user.validator');
 
 /**
  * @swagger

@@ -2,7 +2,7 @@ const router = require('express').Router();
 const authController = require('../controllers/auth.controller');
 const { authenticate } = require('../middlewares/auth.middleware');
 const validate = require('../middlewares/validate.middleware');
-const { createUserSchema } = require('../schemas/user.schema');
+const { signupSchema, loginSchema } = require('../validators/auth.validator');
 
 /**
  * @swagger
@@ -35,7 +35,7 @@ const { createUserSchema } = require('../schemas/user.schema');
  *       409:
  *         description: 이메일 중복
  */
-router.post('/signup', validate(createUserSchema), authController.signup);
+router.post('/signup', validate(signupSchema), authController.signup);
 
 /**
  * @swagger
