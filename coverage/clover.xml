@@ -391,7 +391,7 @@
         <line num="4" count="10" type="cond" truecount="1" falsecount="1"/>
         <line num="6" count="10" type="stmt"/>
       </file>
-      <file name="notfound.middleware.js" path="C:\Users\tpqls\2025-WSD-Project\bookstore-backend\src\middlewares\notfound.middleware.js">
+      <file name="notFound.middleware.js.js" path="C:\Users\tpqls\2025-WSD-Project\bookstore-backend\src\middlewares\notFound.middleware.js.js">
         <metrics statements="2" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
         <line num="2" count="4" type="stmt"/>
         <line num="3" count="0" type="stmt"/>

@@ -54,7 +54,7 @@ app.get('/health', (req, res) => {
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // 404 Handler
-const notFoundMiddleware = require('./middlewares/notFound.middleware');
+const notFoundMiddleware = require('./middlewares/notFound.middleware.js');
 app.use(notFoundMiddleware);
 
 // Error Handler
