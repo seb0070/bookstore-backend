@@ -5,7 +5,6 @@ const { authenticate, authorize } = require('../middlewares/auth.middleware');
 const validateBody = require('../middlewares/validate.middleware');
 const { createBookSchema } = require('../validators/book.validator');
 
-
 /**
  * @swagger
  * /api/books:
@@ -25,13 +24,20 @@ const { createBookSchema } = require('../validators/book.validator');
  *         name: keyword
  *         schema:
  *           type: string
+ *       - in: query
+ *         name: category
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: sort
+ *         schema:
+ *           type: string
+ *           example: "price,ASC"
  *     responses:
  *       200:
  *         description: 조회 성공
  */
-// 전체 조회
 router.get('/', bookController.getBooks);
-
 
 /**
  * @swagger
@@ -51,7 +57,6 @@ router.get('/', bookController.getBooks);
  *       404:
  *         description: 책 없음
  */
-// 단건 조회
 router.get('/:id', bookController.getBookById);
 
 /**
@@ -61,7 +66,7 @@ router.get('/:id', bookController.getBookById);
  *     summary: 책 등록 (ADMIN)
  *     tags: [Books]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -88,7 +93,7 @@ router.get('/:id', bookController.getBookById);
  *               price:
  *                 type: number
  *               published_year:
- *                 type: number
+ *                 type: integer
  *     responses:
  *       201:
  *         description: 생성 성공
@@ -97,7 +102,6 @@ router.get('/:id', bookController.getBookById);
  *       403:
  *         description: 권한 없음
  */
-// 생성
 router.post(
     '/',
     authenticate,
@@ -113,7 +117,7 @@ router.post(
  *     summary: 책 정보 수정 (ADMIN)
  *     tags: [Books]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -129,35 +133,12 @@ router.post(
  *             properties:
  *               title:
  *                 type: string
- *               description:
- *                 type: string
- *               authors:
- *                 type: array
- *                 items:
- *                   type: string
- *               categories:
- *                 type: array
- *                 items:
- *                   type: string
  *               price:
  *                 type: number
- *               published_year:
- *                 type: number
- *               stock_quantity:
- *                 type: integer
  *     responses:
  *       200:
  *         description: 수정 성공
- *       400:
- *         description: 잘못된 요청
- *       401:
- *         description: 인증 실패
- *       403:
- *         description: 권한 없음
- *       404:
- *         description: 책 없음
  */
-// 수정
 router.patch(
     '/:id',
     authenticate,
@@ -172,7 +153,7 @@ router.patch(
  *     summary: 책 삭제 (ADMIN)
  *     tags: [Books]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -182,18 +163,12 @@ router.patch(
  *     responses:
  *       200:
  *         description: 삭제 성공
- *       401:
- *         description: 인증 실패
- *       403:
- *         description: 권한 없음
- *       404:
- *         description: 책 없음
  */
-// 삭제
 router.delete(
     '/:id',
     authenticate,
     authorize(['ADMIN']),
     bookController.deleteBook
 );
+
 module.exports = router;
