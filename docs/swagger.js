@@ -6,46 +6,41 @@ const options = {
         info: {
             title: 'Bookstore API',
             version: '1.0.0',
-            description: 'WSD 과제용 Bookstore REST API',
+            description: '온라인 서점 백엔드 API - 웹서비스설계 2분반 과제2',
+            contact: {
+                name: '정세빈',
+                email: 'student@example.com'
+            }
         },
         servers: [
             {
                 url: 'http://localhost:3000',
+                description: 'Development server'
             },
+            {
+                url: 'http://113.198.66.75:PORT',
+                description: 'JCloud server'
+            }
         ],
         components: {
             securitySchemes: {
-                bearerAuth: {
+                BearerAuth: {
                     type: 'http',
                     scheme: 'bearer',
                     bearerFormat: 'JWT',
-                },
-            },
-            responses: {
-                UnauthorizedError: {
-                    description: '인증 실패',
-                },
-                ForbiddenError: {
-                    description: '권한 없음',
-                },
-                ValidationError: {
-                    description: '입력값 검증 실패',
-                },
-                NotFoundError: {
-                    description: '리소스 없음',
-                },
-            },
+                    description: 'JWT Authorization header using the Bearer scheme.'
+                }
+            }
         },
         security: [
             {
-                bearerAuth: [],
-            },
-        ],
+                BearerAuth: []
+            }
+        ]
     },
-    apis: [
-        './src/routes/*.js',
-        './src/controllers/*.js',
-    ],
+    apis: ['./src/routes/*.js'] // routes 폴더의 모든 파일에서 Swagger 주석 읽기
 };
 
-module.exports = swaggerJsdoc(options);
+const swaggerSpec = swaggerJsdoc(options);
+
+module.exports = swaggerSpec;
