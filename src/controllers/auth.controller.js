@@ -39,4 +39,3 @@ exports.refresh = async (req, res, next) => {
         next(err);
     }
 };
-

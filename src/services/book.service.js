@@ -1,7 +1,6 @@
 const { Book } = require('../models');
 const { Op } = require('sequelize');
 
-// 전체 조회 (페이지네이션 + 검색 + 정렬)
 exports.getBooks = async (query) => {
     const page = parseInt(query.page, 10) || 0;
     const size = parseInt(query.size, 10) || 10;
