@@ -9,7 +9,6 @@ exports.getBooks = async (req, res, next) => {
     }
 };
 
-// GET /api/books/:id
 exports.getBookById = async (req, res, next) => {
     try {
         const { id } = req.params;
@@ -20,7 +19,6 @@ exports.getBookById = async (req, res, next) => {
     }
 };
 
-// POST /api/books
 exports.createBook = async (req, res, next) => {
     try {
         const book = await bookService.createBook(req.body, req.user.id);
@@ -30,7 +28,6 @@ exports.createBook = async (req, res, next) => {
     }
 };
 
-// PATCH /api/books/:id
 exports.updateBook = async (req, res, next) => {
     try {
         const { id } = req.params;
@@ -41,7 +38,6 @@ exports.updateBook = async (req, res, next) => {
     }
 };
 
-// DELETE /api/books/:id
 exports.deleteBook = async (req, res, next) => {
     try {
         const { id } = req.params;
