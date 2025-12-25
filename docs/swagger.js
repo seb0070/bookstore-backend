@@ -14,12 +14,12 @@ const options = {
         },
         servers: [
             {
-                url: 'http://localhost:3000',
-                description: 'Development server'
+                url: 'http://113.198.66.68:13201',
+                description: 'JCloud 배포 서버'
             },
             {
-                url: 'http://113.198.66.75:PORT',
-                description: 'JCloud server'
+                url: 'http://localhost:3000',
+                description: '로컬 개발 서버'
             }
         ],
         components: {
