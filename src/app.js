@@ -5,10 +5,14 @@ const helmet = require('helmet');
 
 const app = express();
 
-// 기본 미들웨어
-app.use(helmet({
-    contentSecurityPolicy: false,  // ← 이 부분 추가!
-}));
+// Swagger 경로만 helmet 제외
+app.use((req, res, next) => {
+    if (req.path.startsWith('/docs')) {
+        return next();
+    }
+    helmet()(req, res, next);
+});
+
 app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
