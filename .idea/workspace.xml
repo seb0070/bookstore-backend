@@ -5,12 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="575cd4a1-17fc-4161-94db-d28cc105b4df" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/seeders/01-users.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/seeders/02-books.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/seeders/04-comments.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/seeders/20251223-users.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/seeders/20251224-books.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controllers/auth.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/auth.controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/middlewares/auth.middleware.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/middlewares/auth.middleware.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/auth.routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/auth.routes.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
