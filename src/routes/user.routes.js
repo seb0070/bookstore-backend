@@ -14,11 +14,12 @@ router.patch('/me', authenticate, validate(updateMeSchema), controller.updateMe)
 // ADMIN
 router.get('/', authenticate, authorize(['ADMIN']), controller.getUsers);
 router.get('/:id', authenticate, authorize(['ADMIN']), controller.getUserById);
+// 관리자 유저 상태 변경
 router.patch(
-    '/:id/deactivate',
+    '/:id/status',
     authenticate,
     authorize(['ADMIN']),
-    controller.deactivateUser
+    validateBody(updateUserStatusSchema),
+    controller.updateUserStatus
 );
-
 module.exports = router;

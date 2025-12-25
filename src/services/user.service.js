@@ -58,7 +58,7 @@ exports.getUserById = async (id) => {
     return user;
 };
 
-exports.deactivateUser = async (userId) => {
+exports.updateUserStatus = async (userId, status) => {
     const user = await User.findByPk(userId);
 
     if (!user) {
@@ -67,11 +67,12 @@ exports.deactivateUser = async (userId) => {
         throw error;
     }
 
-    if (user.status === 'DELETED') {
+    if (user.status === status) {
         const error = new Error('STATE_CONFLICT');
         error.status = 409;
         throw error;
     }
 
-    await user.update({ status: 'BLOCKED' });
+    user.status = status;
+    await user.save();
 };

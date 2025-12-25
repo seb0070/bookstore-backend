@@ -25,11 +25,20 @@ exports.getUserById = async (req, res) => {
     res.json(user);
 };
 
-exports.deactivateUser = async (req, res) => {
-    await userService.deactivateUser(req.params.id);
-    res.status(204).end();
-};
+exports.updateUserStatus = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
 
+        await userService.updateUserStatus(id, status);
+
+        res.status(200).json({
+            message: '사용자 상태가 변경되었습니다',
+        });
+    } catch (err) {
+        next(err);
+    }
+};
 exports.getMe = async (req, res) => {
     res.status(200).json(req.user);
 };
