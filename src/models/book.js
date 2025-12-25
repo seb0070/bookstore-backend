@@ -9,9 +9,25 @@ module.exports = (sequelize, DataTypes) => {
                 as: 'creator',
             });
 
-            // Book.hasMany(models.Review, { foreignKey: 'book_id' });
-            // Book.hasMany(models.CartItem, { foreignKey: 'book_id' });
-            // Book.hasMany(models.OrderItem, { foreignKey: 'book_id' });
+            // N+1 방지를 위해 주석 해제
+            Book.hasMany(models.Review, {
+                foreignKey: 'book_id',
+                as: 'reviews'
+            });
+            Book.hasMany(models.CartItem, {
+                foreignKey: 'book_id',
+                as: 'cartItems'
+            });
+            Book.hasMany(models.OrderItem, {
+                foreignKey: 'book_id',
+                as: 'orderItems'
+            });
+            Book.belongsToMany(models.User, {
+                through: models.Wishlist,
+                foreignKey: 'book_id',
+                otherKey: 'user_id',
+                as: 'wishlistedBy'
+            });
         }
     }
 
@@ -22,45 +38,50 @@ module.exports = (sequelize, DataTypes) => {
                 primaryKey: true,
                 autoIncrement: true,
             },
-
             title: {
                 type: DataTypes.STRING(255),
                 allowNull: false,
             },
-
             description: {
                 type: DataTypes.TEXT,
             },
-
             isbn: {
                 type: DataTypes.STRING(50),
                 unique: true,
             },
-
             authors: {
-                type: DataTypes.TEXT,
+                type: DataTypes.JSON, // TEXT → JSON 변경
                 allowNull: false,
+                get() {
+                    const value = this.getDataValue('authors');
+                    return typeof value === 'string' ? JSON.parse(value) : value;
+                },
+                set(value) {
+                    this.setDataValue('authors', JSON.stringify(value));
+                }
             },
-
             categories: {
-                type: DataTypes.TEXT,
+                type: DataTypes.JSON, // TEXT → JSON 변경
                 allowNull: false,
+                get() {
+                    const value = this.getDataValue('categories');
+                    return typeof value === 'string' ? JSON.parse(value) : value;
+                },
+                set(value) {
+                    this.setDataValue('categories', JSON.stringify(value));
+                }
             },
-
             publisher: {
                 type: DataTypes.STRING(255),
             },
-
             published_year: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
             },
-
             price: {
                 type: DataTypes.DECIMAL(10, 2),
                 allowNull: false,
             },
-
             stock_quantity: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
@@ -69,13 +90,14 @@ module.exports = (sequelize, DataTypes) => {
                     min: 0,
                 },
             },
-
+            cover_image: { // 추가!
+                type: DataTypes.STRING(500),
+            },
             status: {
                 type: DataTypes.ENUM('ACTIVE', 'DELETED'),
                 allowNull: false,
                 defaultValue: 'ACTIVE',
             },
-
             deleted_at: {
                 type: DataTypes.DATE,
             },
@@ -84,8 +106,8 @@ module.exports = (sequelize, DataTypes) => {
             sequelize,
             modelName: 'Book',
             tableName: 'books',
-            underscored: true,   // ⭐ snake_case 핵심
-            timestamps: true,   // created_at / updated_at
+            underscored: true,
+            timestamps: true,
         }
     );
 

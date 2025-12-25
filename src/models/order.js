@@ -6,8 +6,8 @@ module.exports = (sequelize, DataTypes) => {
         static associate(models) {
             Order.belongsTo(models.User, {
                 foreignKey: 'user_id',
+                as: 'user'
             });
-
             Order.hasMany(models.OrderItem, {
                 foreignKey: 'order_id',
                 as: 'items',
@@ -18,21 +18,15 @@ module.exports = (sequelize, DataTypes) => {
     Order.init(
         {
             status: {
-                type: DataTypes.ENUM(
-                    'PENDING',
-                    'PAID',
-                    'SHIPPED',
-                    'COMPLETED',
-                    'CANCELLED'
-                ),
+                // ERD와 일치하도록 3개만 유지
+                type: DataTypes.ENUM('PENDING', 'PAID', 'CANCELLED'),
                 allowNull: false,
                 defaultValue: 'PENDING',
             },
-
             total_price: {
                 type: DataTypes.DECIMAL(10, 2),
                 allowNull: false,
-                defaultValue: 0, // ⭐ 주문 생성 시 편함
+                defaultValue: 0,
             },
         },
         {

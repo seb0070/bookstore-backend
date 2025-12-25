@@ -1,20 +1,55 @@
 'use strict';
+const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-    const Wishlist = sequelize.define(
-        'Wishlist',
-        {},
+    class OrderItem extends Model {
+        static associate(models) {
+            OrderItem.belongsTo(models.Order, {
+                foreignKey: 'order_id',
+                as: 'order'
+            });
+            OrderItem.belongsTo(models.Book, {
+                foreignKey: 'book_id',
+                as: 'book'
+            });
+        }
+    }
+
+    OrderItem.init(
         {
-            tableName: 'wishlists',
-            timestamps: false,
+            order_id: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                primaryKey: true,
+            },
+            book_id: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                primaryKey: true,
+            },
+            quantity: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                validate: { min: 1 },
+            },
+            price: {
+                type: DataTypes.DECIMAL(10, 2),
+                allowNull: false,
+            },
+            created_at: {
+                type: DataTypes.DATE,
+                allowNull: false,
+                defaultValue: DataTypes.NOW,
+            }
+        },
+        {
+            sequelize,
+            modelName: 'OrderItem',
+            tableName: 'order_items',
             underscored: true,
+            timestamps: false, // created_at만 수동 관리
         }
     );
 
-    Wishlist.associate = (models) => {
-        Wishlist.belongsTo(models.User, { foreignKey: 'user_id' });
-        Wishlist.belongsTo(models.Book, { foreignKey: 'book_id' });
-    };
-
-    return Wishlist;
+    return OrderItem;
 };

@@ -4,8 +4,49 @@ const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
     class User extends Model {
         static associate(models) {
-            // associations는 나중에 연결
-            // User.hasMany(models.Book, { foreignKey: 'created_by' });
+            // N+1 방지를 위해 모든 관계 정의
+            User.hasMany(models.Book, {
+                foreignKey: 'created_by',
+                as: 'createdBooks'
+            });
+            User.hasMany(models.Review, {
+                foreignKey: 'user_id',
+                as: 'reviews'
+            });
+            User.hasMany(models.Comment, {
+                foreignKey: 'user_id',
+                as: 'comments'
+            });
+            User.hasMany(models.Order, {
+                foreignKey: 'user_id',
+                as: 'orders'
+            });
+            User.hasOne(models.Cart, {
+                foreignKey: 'user_id',
+                as: 'cart'
+            });
+            User.hasMany(models.UserRefreshToken, {
+                foreignKey: 'user_id',
+                as: 'refreshTokens'
+            });
+            User.belongsToMany(models.Book, {
+                through: models.Wishlist,
+                foreignKey: 'user_id',
+                otherKey: 'book_id',
+                as: 'wishlist'
+            });
+            User.belongsToMany(models.Review, {
+                through: models.ReviewLike,
+                foreignKey: 'user_id',
+                otherKey: 'review_id',
+                as: 'likedReviews'
+            });
+            User.belongsToMany(models.Comment, {
+                through: models.CommentLike,
+                foreignKey: 'user_id',
+                otherKey: 'comment_id',
+                as: 'likedComments'
+            });
         }
     }
 
@@ -16,7 +57,6 @@ module.exports = (sequelize, DataTypes) => {
                 primaryKey: true,
                 autoIncrement: true,
             },
-
             email: {
                 type: DataTypes.STRING(255),
                 allowNull: false,
@@ -25,45 +65,36 @@ module.exports = (sequelize, DataTypes) => {
                     isEmail: true,
                 },
             },
-
             password_hash: {
                 type: DataTypes.STRING(255),
                 allowNull: false,
             },
-
             name: {
                 type: DataTypes.STRING(100),
                 allowNull: false,
             },
-
             birth_date: {
                 type: DataTypes.DATEONLY,
             },
-
             gender: {
                 type: DataTypes.ENUM('MALE', 'FEMALE', 'OTHER'),
             },
-
             phone_number: {
                 type: DataTypes.STRING(20),
             },
-
             address: {
                 type: DataTypes.STRING(255),
             },
-
             role: {
                 type: DataTypes.ENUM('USER', 'ADMIN'),
                 allowNull: false,
                 defaultValue: 'USER',
             },
-
             status: {
                 type: DataTypes.ENUM('ACTIVE', 'BLOCKED', 'DELETED'),
                 allowNull: false,
                 defaultValue: 'ACTIVE',
             },
-
             deleted_at: {
                 type: DataTypes.DATE,
             },
@@ -72,8 +103,8 @@ module.exports = (sequelize, DataTypes) => {
             sequelize,
             modelName: 'User',
             tableName: 'users',
-            underscored: true,   // ⭐ snake_case 핵심 옵션
-            timestamps: true,   // created_at / updated_at 자동
+            underscored: true,
+            timestamps: true,
         }
     );
 
