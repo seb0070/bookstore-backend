@@ -41,10 +41,10 @@ exports.signupSchema = Joi.object({
         }),
 
     gender: Joi.string()
-        .valid('M', 'F', 'OTHER')
+        .valid('MALE', 'FEMALE', 'OTHER')
         .optional()
         .messages({
-            'any.only': '성별은 M, F, OTHER 중 하나여야 합니다.'
+            'any.only': '성별은 MALE, FEMALE, OTHER 중 하나여야 합니다.'
         }),
 
     address: Joi.string()

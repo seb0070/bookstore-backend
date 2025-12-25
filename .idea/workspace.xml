@@ -6,12 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="575cd4a1-17fc-4161-94db-d28cc105b4df" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controllers/comment.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/comment.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/models/book.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/book.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/models/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/user.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/routes/comment.routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/comment.routes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/validators/auth.validator.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/validators/auth.validator.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/validators/user.validator.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/validators/user.validator.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
