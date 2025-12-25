@@ -5,14 +5,8 @@ const helmet = require('helmet');
 
 const app = express();
 
-// Swagger 경로만 helmet 제외
-app.use((req, res, next) => {
-    if (req.path.startsWith('/docs')) {
-        return next();
-    }
-    helmet()(req, res, next);
-});
-
+// 기본 미들웨어
+app.use(helmet());
 app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
@@ -39,9 +33,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/books', bookRoutes);
 app.use('/api/orders', orderRoutes);
-app.use('/api', reviewRoutes);      // /api/books/:bookId/reviews, /api/reviews/...
-app.use('/api', commentRoutes);     // /api/reviews/:reviewId/comments, /api/comments/...
-app.use('/api', likeRoutes);        // /api/reviews/:id/like, /api/comments/:id/like
+app.use('/api', reviewRoutes);
+app.use('/api', commentRoutes);
+app.use('/api', likeRoutes);
 app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/stats', statsRoutes);
@@ -56,8 +50,21 @@ app.get('/health', (req, res) => {
     });
 });
 
-// Swagger Documentation
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+// Swagger Documentation (수정된 부분)
+const swaggerUiAssetPath = require('swagger-ui-dist').getAbsoluteFSPath();
+const swaggerOptions = {
+    swaggerOptions: {
+        url: '/api-docs.json',
+    },
+    customCss: '.swagger-ui .topbar { display: none }',
+};
+
+app.get('/api-docs.json', (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(swaggerSpec);
+});
+
+app.use('/docs', express.static(swaggerUiAssetPath), swaggerUi.serve, swaggerUi.setup(swaggerSpec, swaggerOptions));
 
 // 404 Handler
 const notFoundMiddleware = require('./middlewares/notFound.middleware');
