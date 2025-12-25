@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="575cd4a1-17fc-4161-94db-d28cc105b4df" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,6 +47,7 @@
       <recent name="C:\Users\tpqls\2025-WSD-Project\bookstore-backend\postman" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\tpqls\2025-WSD-Project\bookstore-backend\docs" />
       <recent name="C:\Users\tpqls\2025-WSD-Project\bookstore-backend" />
       <recent name="C:\Users\tpqls\2025-WSD-Project\bookstore-backend\src" />
     </key>
