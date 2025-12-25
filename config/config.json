@@ -4,24 +4,21 @@
     "password": "0000",
     "database": "bookstore",
     "host": "127.0.0.1",
-    "dialect": "mysql",
-    "logging": false,
-    "define": {
-      "freezeTableName": true,
-      "timestamps": true
-    }
+    "port": 3306,
+    "dialect": "mysql"
   },
   "test": {
     "username": "root",
     "password": "0000",
-    "database": "database_test",
+    "database": "bookstore",
     "host": "127.0.0.1",
+    "port": 3306,
     "dialect": "mysql"
   },
   "production": {
     "username": "root",
     "password": "0000",
-    "database": "bookstore_prod",
+    "database": "bookstore",
     "host": "127.0.0.1",
     "dialect": "mysql"
   }
