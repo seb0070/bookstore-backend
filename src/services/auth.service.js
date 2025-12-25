@@ -4,7 +4,7 @@ const { User, UserRefreshToken } = require('../models');
 
 function signAccessToken(user) {
     return jwt.sign(
-        { id: user.id, role: user.role },
+        { id: user.id, role: user.role, status: user.status },
         process.env.JWT_SECRET,
         { expiresIn: process.env.JWT_EXPIRES_IN }
     );
@@ -12,7 +12,7 @@ function signAccessToken(user) {
 
 function signRefreshToken(user) {
     return jwt.sign(
-        { id: user.id, role: user.role },
+        { id: user.id, role: user.role, status: user.status },
         process.env.REFRESH_TOKEN_SECRET,
         { expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN }
     );

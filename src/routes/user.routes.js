@@ -3,6 +3,7 @@ const controller = require('../controllers/user.controller');
 const { authenticate, authorize } = require('../middlewares/auth.middleware');
 const validate = require('../middlewares/validate.middleware');
 const { createUserSchema, updateMeSchema } = require('../schemas/user.schema');
+const { validateBody } = require('../middlewares/validate.middleware');
 
 // 회원가입
 router.post('/', validate(createUserSchema), controller.createUser);
