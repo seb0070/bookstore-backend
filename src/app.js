@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const helmet = require('helmet');
 const passport = require('../config/passport');
 const { apiLimiter } = require('./middlewares/rateLimiter.middleware');
+const healthController = require('./controllers/health.controller');
 
 const app = express();
 
@@ -53,14 +54,7 @@ app.use('/api/cart', cartRoutes);
 app.use('/api/stats', statsRoutes);
 
 // Health Check
-app.get('/health', (req, res) => {
-    res.status(200).json({
-        status: 'OK',
-        version: '1.0.0',
-        timestamp: new Date().toISOString(),
-        uptime: process.uptime()
-    });
-});
+app.get('/health', healthController.healthCheck);
 
 // Swagger Documentation
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
