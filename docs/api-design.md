@@ -54,15 +54,37 @@
 }
 ```
 
+### 5. 소셜 로그인 지원 (과제 3 추가)
+**과제 2**: 로컬 로그인만 지원  
+**과제 3**:
+- Google OAuth 2.0 연동
+- Firebase Authentication 연동
+- User 모델에 provider, provider_id 필드 추가
+- 3가지 로그인 방식 지원 (LOCAL, GOOGLE, FIREBASE)
+
+### 6. Redis 및 Rate Limiting (과제 3 추가)
+- Redis 연동
+- API Rate Limiting (100 요청/15분)
+- 인증 Rate Limiting (5 요청/15분)
+- 429 Too Many Requests 상태 코드 추가
+
+### 7. Docker 구성 (과제 3 추가)
+- Dockerfile 작성
+- docker-compose.yml (MySQL, Redis, App)
+- 컨테이너 기반 배포 지원
+
 ---
 
 ## API 엔드포인트 분류
 
-### 인증 (Auth) - 4개
+### 인증 (Auth) - 7개
 - `POST /api/auth/signup` - 회원가입
 - `POST /api/auth/login` - 로그인
 - `POST /api/auth/refresh` - 토큰 갱신
 - `POST /api/auth/logout` - 로그아웃
+- **`GET /api/auth/google`** - Google OAuth 로그인 시작 (신규)
+- **`GET /api/auth/google/callback`** - Google OAuth 콜백 (신규)
+- **`POST /api/auth/firebase`** - Firebase Auth 로그인 (신규)
 
 ### 사용자 (Users) - 5개
 - `GET /api/users/me` - 내 정보 조회
@@ -155,3 +177,10 @@
 - 모듈화된 구조 (MVC 패턴)
 - 환경변수 분리 (.env)
 - 에러 미들웨어 중앙화
+
+### 과제 3 추가 요구사항 충족도
+- ✅ 소셜 로그인 2종 이상: Google OAuth + Firebase Auth
+- ✅ Redis 연동: Rate Limiting, 캐싱
+- ✅ Docker 구성: Dockerfile + docker-compose.yml
+- ✅ HTTP Status Code 12종 이상: 204, 429, 503 추가
+- ✅ 최종 엔드포인트: 50개
