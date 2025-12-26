@@ -22,8 +22,8 @@ exports.getMyWishlist = async (req, res, next) => {
 exports.removeFromWishlist = async (req, res, next) => {
     try {
         const { bookId } = req.params;
-        const result = await wishlistService.removeFromWishlist(req.user.id, bookId);
-        res.status(200).json(result);
+        await wishlistService.removeFromWishlist(req.user.id, bookId);
+        res.status(204).send(); // 204 No Content (응답 본문 없음)
     } catch (err) {
         next(err);
     }

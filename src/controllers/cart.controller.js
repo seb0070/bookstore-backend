@@ -32,7 +32,7 @@ exports.removeFromCart = async (req, res, next) => {
     try {
         const { id } = req.params;
         const result = await cartService.removeFromCart(req.user.id, id);
-        res.status(200).json(result);
+        res.status(204).send();
     } catch (err) {
         next(err);
     }
@@ -41,7 +41,7 @@ exports.removeFromCart = async (req, res, next) => {
 exports.clearCart = async (req, res, next) => {
     try {
         const result = await cartService.clearCart(req.user.id);
-        res.status(200).json(result);
+        res.status(204).send();
     } catch (err) {
         next(err);
     }
