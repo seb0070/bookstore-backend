@@ -3,6 +3,7 @@ const authController = require('../controllers/auth.controller');
 const { authenticate } = require('../middlewares/auth.middleware');
 const validate = require('../middlewares/validate.middleware');
 const { signupSchema, loginSchema } = require('../validators/auth.validator');
+const { authLimiter } = require('../middlewares/rateLimiter.middleware');
 
 /**
  * @swagger
@@ -34,8 +35,10 @@ const { signupSchema, loginSchema } = require('../validators/auth.validator');
  *         description: 회원가입 성공
  *       409:
  *         description: 이메일 중복
+ *       429:
+ *         description: 요청 횟수 초과 (5회/15분)
  */
-router.post('/signup', validate(signupSchema), authController.signup);
+router.post('/signup', authLimiter, validate(signupSchema), authController.signup);
 
 /**
  * @swagger
@@ -62,8 +65,10 @@ router.post('/signup', validate(signupSchema), authController.signup);
  *         description: 로그인 성공
  *       401:
  *         description: 인증 실패
+ *       429:
+ *         description: 로그인 시도 횟수 초과 (5회/15분)
  */
-router.post('/login', authController.login);
+router.post('/login', authLimiter, authController.login);
 
 /**
  * @swagger

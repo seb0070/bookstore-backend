@@ -3,6 +3,7 @@ const cors = require('cors');
 const morgan = require('morgan');
 const helmet = require('helmet');
 const passport = require('../config/passport');
+const { apiLimiter } = require('./middlewares/rateLimiter.middleware');
 
 const app = express();
 
@@ -19,6 +20,9 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
+
+// 전역 Rate Limiter 적용 (Health check 제외)
+app.use('/api', apiLimiter);
 
 // Swagger
 const swaggerUi = require('swagger-ui-express');
