@@ -104,4 +104,97 @@ router.post('/logout', authenticate, authController.logout);
  */
 router.post('/refresh', authController.refresh);
 
+/**
+ * @swagger
+ * /api/auth/google:
+ *   get:
+ *     summary: Google OAuth 로그인
+ *     tags: [Auth]
+ *     description: Google 계정으로 로그인합니다.
+ *     responses:
+ *       302:
+ *         description: Google 로그인 페이지로 리다이렉트
+ *       200:
+ *         description: 로그인 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 accessToken:
+ *                   type: string
+ *                 refreshToken:
+ *                   type: string
+ *                 user:
+ *                   type: object
+ */
+router.get('/google', authController.googleAuth);
+
+/**
+ * @swagger
+ * /api/auth/google/callback:
+ *   get:
+ *     summary: Google OAuth 콜백
+ *     tags: [Auth]
+ *     description: Google 인증 후 콜백 처리
+ *     responses:
+ *       200:
+ *         description: 로그인 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 accessToken:
+ *                   type: string
+ *                 refreshToken:
+ *                   type: string
+ *                 user:
+ *                   type: object
+ *       401:
+ *         description: 인증 실패
+ */
+router.get('/google/callback', authController.googleAuthCallback);
+
+/**
+ * @swagger
+ * /api/auth/firebase:
+ *   post:
+ *     summary: Firebase Auth 로그인
+ *     tags: [Auth]
+ *     description: Firebase ID Token을 사용하여 로그인합니다.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - idToken
+ *             properties:
+ *               idToken:
+ *                 type: string
+ *                 description: Firebase Authentication ID Token
+ *                 example: "eyJhbGciOiJSUzI1NiIsImtpZCI6..."
+ *     responses:
+ *       200:
+ *         description: 로그인 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 accessToken:
+ *                   type: string
+ *                 refreshToken:
+ *                   type: string
+ *                 user:
+ *                   type: object
+ *       400:
+ *         description: ID Token 누락 또는 유효하지 않음
+ *       401:
+ *         description: ID Token 만료
+ */
+router.post('/firebase', authController.firebaseAuth);
+
 module.exports = router;

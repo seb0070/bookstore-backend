@@ -24,3 +24,6 @@ Thumbs.db
 sequelize.log
 
 .idea/workspace.xml
+
+# Firebase
+config/firebase-service-account.json

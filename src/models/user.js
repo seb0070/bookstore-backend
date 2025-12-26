@@ -67,8 +67,19 @@ module.exports = (sequelize, DataTypes) => {
                 },
             },
             password_hash: {
-                type: DataTypes.STRING(255),
+                type: DataTypes.STRING,
+                allowNull: true,  // false → true로 변경
+                field: 'password_hash'
+            },
+            provider: {
+                type: DataTypes.ENUM('LOCAL', 'GOOGLE', 'FIREBASE'),
                 allowNull: false,
+                defaultValue: 'LOCAL'
+            },
+            provider_id: {
+                type: DataTypes.STRING,
+                allowNull: true,
+                unique: true
             },
             name: {
                 type: DataTypes.STRING(100),
