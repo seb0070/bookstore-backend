@@ -3,7 +3,6 @@
 ## 전체 구조 개요
 
 본 프로젝트는 **3-Tier 아키텍처**를 기반으로 한 RESTful API 서버입니다.
-
 ```
 ┌─────────────────────────────────────────────────────┐
 │                   Client Layer                      │
@@ -20,7 +19,7 @@
 │        │              │               │            │
 │  ┌─────┴──────────────┴───────────────┴────────┐  │
 │  │           Middlewares                       │  │
-│  │  (Auth / Validation / Error Handling)       │  │
+│  │  (Auth / Validation / Rate Limiting)        │  │
 │  └─────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────┘
                         ▼
@@ -31,9 +30,13 @@
 │  │ Sequelize│   ←→   │      MySQL          │      │
 │  │  Models  │        │   (bookstore DB)    │      │
 │  └──────────┘        └─────────────────────┘      │
+│                                                     │
+│  ┌──────────┐        ┌─────────────────────┐      │
+│  │  ioredis │   ←→   │       Redis         │      │
+│  │  Client  │        │  (Cache/Sessions)   │      │
+│  └──────────┘        └─────────────────────┘      │
 └─────────────────────────────────────────────────────┘
 ```
-
 ---
 
 ## 계층별 역할
@@ -199,6 +202,33 @@ const errorHandler = (err, req, res, next) => {
 };
 ```
 
+#### **Rate Limiter 미들웨어** (`rateLimiter.middleware.js`)
+```javascript
+// API Rate Limiter (100 요청/15분)
+const apiLimiter = rateLimit({
+  store: new RedisStore({
+    sendCommand: (...args) => redisClient.call(...args),
+    prefix: 'rl:api:'
+  }),
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  handler: (req, res) => {
+    res.status(429).json({
+      status: 429,
+      code: 'TOO_MANY_REQUESTS',
+      message: '너무 많은 요청이 발생했습니다.'
+    });
+  }
+});
+
+// 인증 Rate Limiter (5 요청/15분)
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  skipSuccessfulRequests: true
+});
+```
+
 ---
 
 ## 의존성 흐름
@@ -222,6 +252,12 @@ Database
 ## 모듈 구조
 
 ```
+config/
+│   ├── database.js              # Sequelize 설정
+│   ├── passport.js              # Passport.js (Google OAuth)
+│   ├── firebase.js              # Firebase Admin SDK
+│   ├── redis.js                 # Redis 클라이언트
+│   └── firebase-service-account.json  # Firebase 서비스 계정 키
 src/
 ├── app.js                    # Express 앱 설정
 ├── server.js                 # 서버 시작점
@@ -332,7 +368,7 @@ src/
 
 ## 보안 아키텍처
 
-### 인증 플로우
+### 인증 플로우 (로컬로그인)
 ```
 1. POST /api/auth/login
    ↓
@@ -354,6 +390,43 @@ src/
    - 역할 확인
    ↓
 8. Controller 실행
+```
+### 소셜 로그인 플로우
+
+#### Google OAuth
+```
+1. GET /api/auth/google
+   ↓
+2. Google 로그인 페이지로 리다이렉트
+   ↓
+3. 사용자 Google 계정 선택
+   ↓
+4. GET /api/auth/google/callback
+   ↓
+5. Passport 검증
+   - 기존 사용자 확인 (provider_id)
+   - 없으면 새 사용자 생성 (provider: GOOGLE)
+   ↓
+6. JWT 생성
+   ↓
+7. { accessToken, refreshToken }
+```
+
+#### Firebase Auth
+```
+1. (프론트엔드) Firebase SDK로 로그인
+   ↓
+2. Firebase ID Token 발급
+   ↓
+3. POST /api/auth/firebase { idToken }
+   ↓
+4. Firebase Admin SDK로 토큰 검증
+   ↓
+5. 사용자 찾기 또는 생성 (provider: FIREBASE)
+   ↓
+6. JWT 생성
+   ↓
+7. { accessToken, refreshToken }
 ```
 
 ---
@@ -420,9 +493,12 @@ src/
 | **Framework** | Express.js 5.x |
 | **ORM** | Sequelize 6.x |
 | **Database** | MySQL 8.0 |
-| **Authentication** | JWT (jsonwebtoken) |
+| **Cache** | Redis 7 (ioredis) |
+| **Authentication** | JWT (jsonwebtoken), Passport.js, Firebase Admin SDK |
 | **Validation** | Joi |
 | **Security** | bcrypt, Helmet, CORS |
+| **Rate Limiting** | express-rate-limit, rate-limit-redis |
+| **Container** | Docker, Docker Compose |
 | **Testing** | Jest, Supertest |
 | **Process Manager** | PM2 |
 | **Documentation** | Swagger (swagger-jsdoc) |
