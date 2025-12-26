@@ -18,6 +18,94 @@
 - **통계 기능**: 도서/사용자/주문 통계 (관리자 전용)
 - **역할 기반 접근 제어**: USER/ADMIN 권한 분리
 
+### 주요 기능 목록
+- **사용자 관리**: 회원가입, 로그인, JWT 기반 인증/인가, **소셜 로그인 (Google OAuth, Firebase Auth)**
+- **도서 관리**: CRUD, 검색, 정렬, 페이지네이션
+- **주문 시스템**: 장바구니, 주문 생성/조회, 재고 관리
+- **리뷰 & 댓글**: 도서 리뷰 작성, 댓글, 좋아요 기능
+- **위시리스트**: 관심 도서 저장 및 관리
+- **통계 기능**: 도서/사용자/주문 통계 (관리자 전용)
+- **역할 기반 접근 제어**: USER/ADMIN 권한 분리
+- **Rate Limiting**: Redis 기반 API 호출 제한 (100req/15min, Auth 5req/15min)
+- **Docker 지원**: Docker Compose로 전체 스택 구성 (MySQL, Redis, App)
+
+---
+
+## 📋 주요 기능 상세
+
+### 1. 인증/인가
+- JWT 기반 인증 (Access Token 15분 + Refresh Token 7일)
+- **소셜 로그인**
+    - Google OAuth 2.0
+    - Firebase Authentication (Google, GitHub)
+- RBAC (USER, ADMIN 역할)
+- 토큰 갱신 메커니즘
+- Rate Limiting (로그인 5회/15분)
+
+#### 소셜 로그인 구현 상세
+
+**구현 완료 항목:**
+- ✅ Google OAuth 2.0 (Passport.js)
+- ✅ Firebase Authentication
+- ✅ 소셜 로그인용 엔드포인트 3개
+- ✅ User 모델 provider 필드 추가 (LOCAL, GOOGLE, FIREBASE)
+- ✅ Google Cloud Console OAuth 설정 완료
+- ✅ Firebase Console 설정 완료
+
+**환경 제약 사항:**
+현재 배포 환경(HTTP)에서는 Google OAuth의 보안 정책으로 전체 플로우 테스트가 제한됩니다.
+실제 프로덕션 환경(HTTPS)에서는 정상 작동합니다.
+
+**증빙 자료:**
+- Google OAuth 설정 스크린샷 (제출 파일 참고)
+- Firebase Console 설정 스크린샷 (제출 파일 참고)
+- 소스 코드: `config/passport.js`, `config/firebase.js`, `src/controllers/auth.controller.js`
+- API 문서: http://113.198.66.68:13201/docs
+
+### 2. 도서 관리
+- CRUD 작업
+- 검색, 정렬, 페이지네이션
+- 재고 관리
+- 관리자 전용 기능 (생성, 수정, 삭제)
+
+### 3. 주문 시스템
+- 장바구니 → 주문 변환
+- 주문 상태 관리 (PENDING, PAID, CANCELLED)
+- 주문 내역 조회
+- 주문 취소 기능
+- 재고 자동 차감
+
+### 4. 리뷰 & 댓글
+- 도서 리뷰 작성 (1-5점 평점)
+- 리뷰 댓글 작성
+- 좋아요 기능 (리뷰, 댓글)
+- 리뷰 수정/삭제 (본인만)
+
+### 5. 위시리스트 & 장바구니
+- 위시리스트 관리 (추가, 조회, 삭제)
+- 장바구니 CRUD
+- 수량 조절
+- 일괄 삭제
+- 장바구니 결제 (체크아웃)
+
+### 6. 통계 (관리자 전용)
+- 도서 통계 (판매량, 재고)
+- 사용자 통계 (가입자 수, 활성 사용자)
+- 주문 통계 (매출, 주문 건수)
+
+### 7. 인프라
+- **Redis Rate Limiting**
+    - API: 100 요청/15분
+    - 인증: 5 요청/15분
+    - 429 Too Many Requests 자동 응답
+- **Health Check**
+    - DB + Redis 상태 모니터링
+    - 503 Service Unavailable 응답
+- **Docker Compose**
+    - MySQL 8.0 컨테이너
+    - Redis 7 컨테이너
+    - Node.js App 컨테이너
+    - 전체 스택 한 번에 실행
 ---
 
 ## 🌐 배포 서버
