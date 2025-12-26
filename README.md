@@ -203,7 +203,7 @@ curl -X POST http://113.198.66.68:13201/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "email": "user1@example.com",
-    "password": "User1234!@"
+    "password": "P@ssw0rd!"
   }'
 ```
 
@@ -214,15 +214,14 @@ curl -X POST http://113.198.66.68:13201/api/auth/login \
 ### 일반 사용자 (USER)
 | Email | Password | 설명 |
 |-------|----------|------|
-| `user1@example.com` | `User1234!@` | 테스트용 일반 사용자 1 |
-| `user2@example.com` | `User1234!@` | 테스트용 일반 사용자 2 |
-| `user3@example.com` | `User1234!@` | 테스트용 일반 사용자 3 |
+| `user1@example.com` | `P@ssw0rd!` | 테스트용 일반 사용자 1 |
+| ... | ... | ...|
+| `user29@example.com` | `P@ssw0rd!` | 테스트용 일반 사용자 29 |
 
 ### 관리자 (ADMIN)
 | Email | Password | 설명 |
 |-------|----------|------|
-| `admin1@example.com` | `Admin1234!@` | 관리자 계정 1 |
-| `admin2@example.com` | `Admin1234!@` | 관리자 계정 2 |
+| `admin1@example.com` | `P@ssw0rd!` | 관리자 계정 1 |
 
 **주의**: 프로덕션 환경에서는 반드시 비밀번호를 변경하세요.
 
@@ -238,8 +237,6 @@ Database: bookstore
 Username: root
 Password: (제출용 별도 문서 참고)
 ```
-
-**보안**: DB 비밀번호는 제출용 문서에만 기재 (GitHub 공개 불가)
 
 ### 접속 명령어
 ```bash
@@ -257,20 +254,18 @@ SELECT COUNT(*) FROM reviews;  # 150개
 ```
 
 ### 테이블 목록
-- `users` - 사용자 (20건)
-- `user_refresh_tokens` - 리프레시 토큰
-- `books` - 도서 (100건)
-- `orders` - 주문 (50건)
-- `order_items` - 주문 상품 (100건)
-- `reviews` - 리뷰 (150건)
-- `review_likes` - 리뷰 좋아요 (60건)
-- `comments` - 댓글 (50건)
-- `comment_likes` - 댓글 좋아요 (20건)
-- `wishlists` - 위시리스트 (30건)
-- `carts` - 장바구니 (10건)
-- `cart_items` - 장바구니 항목 (20건)
+- `users` - 사용자 (30명)
+- `books` - 도서 (100권)
+- `reviews` - 리뷰 (50개)
+- `comments` - 댓글 (30개)
+- `wishlists` - 위시리스트 (30개)
+- `orders` - 주문 (20개)
+- `order_items` - 주문 상품 (~63개)
+- `carts` - 장바구니 (20개)
+- `cart_items` - 장바구니 항목 (~42개)
+- `user_refresh_tokens` - 리프레시 토큰 (동적 생성)
 
-**총 시드 데이터: 380+ 레코드**
+**총 시드 데이터: 약 385개 레코드**
 
 ---
 
