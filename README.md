@@ -1,6 +1,6 @@
 # 📚 Bookstore Backend API
 
-온라인 서점 백엔드 REST API - 웹서비스설계 2분반 과제2
+온라인 서점 백엔드 REST API - 웹서비스설계 2분반 TermProject(과제2 확장)
 
 ---
 
@@ -20,36 +20,41 @@
 
 ---
 
-## 배포 주소
+## 🌐 배포 서버
 
-### JCloud 배포 환경
-- **Base URL**: `http://113.198.66.68:13201`
-- **Health Check**: `http://113.198.66.68:13201/health`
-- **API Root**: `http://113.198.66.68:13201/api`
+**운영 중인 서버:**
+- **API 서버:** http://113.198.66.68:13201
+- **Swagger 문서:** http://113.198.66.68:13201/docs
+- **Health Check:** http://113.198.66.68:13201/health
 
-### Swagger 제한사항
-배포 서버는 HTTP 프로토콜을 사용하여 Swagger UI가 Mixed Content 보안 정책으로 인해 정상 작동하지 않습니다.
+누구나 접속 가능합니다!
+---
 
-- **로컬 환경**: `http://localhost:3000/docs` (정상 작동)
-- **배포 환경**: ❌ (HTTP/HTTPS 혼합 콘텐츠 제약)
-- **대안**: Postman Collection 사용 권장 (`/postman/bookstore-api.postman_collection.json`)
+## 🚀 시작하기
+
+### 사전 요구사항
+
+- Node.js 18 이상
+- MySQL 8.0
+- Redis 7 (또는 Docker)
+- Docker & Docker Compose (선택사항)
 
 ---
 
-## 실행 방법
+### 1️⃣ 로컬 개발 환경 (Docker 없이)
 
-### 1. 저장소 클론
+#### 1. 저장소 클론
 ```bash
 git clone https://github.com/seb0070/bookstore-backend.git
 cd bookstore-backend
 ```
 
-### 2. 의존성 설치
+#### 2. 의존성 설치
 ```bash
 npm install
 ```
 
-### 3. 환경 변수 설정
+#### 3. 환경 변수 설정
 `.env.example` 파일을 참고하여 `.env` 파일 생성:
 ```bash
 cp .env.example .env
@@ -64,18 +69,32 @@ DB_USER=root
 DB_PASSWORD=your_mysql_password_here
 DB_NAME=bookstore
 
-# JWT (최소 32자 이상의 안전한 랜덤 문자열 사용)
+# JWT
 JWT_SECRET=your_super_secure_jwt_secret_key_min_32_characters
 JWT_EXPIRES_IN=15m
 REFRESH_TOKEN_SECRET=your_super_secure_refresh_token_secret_min_32_chars
 REFRESH_TOKEN_EXPIRES_IN=7d
+
+# Google OAuth
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+GOOGLE_CALLBACK_URL=http://localhost:3000/api/auth/google/callback
+
+# Firebase
+FIREBASE_PROJECT_ID=your_firebase_project_id
+FIREBASE_SERVICE_ACCOUNT_PATH=./config/firebase-service-account.json
+
+# Redis
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_PASSWORD=
 
 # Server
 PORT=3000
 NODE_ENV=development
 ```
 
-### 4. 데이터베이스 설정
+#### 4. 데이터베이스 설정
 ```bash
 # MySQL 데이터베이스 생성
 mysql -u root -p
@@ -85,11 +104,23 @@ exit;
 # 마이그레이션 실행
 npm run migrate
 
-# 시드 데이터 생성 (380+ 레코드)
+# 시드 데이터 생성
 npm run seed
 ```
 
-### 5. 서버 실행
+#### 5. Redis 설치 및 시작
+```bash
+# Ubuntu/Debian
+sudo apt update
+sudo apt install redis-server -y
+sudo systemctl start redis-server
+
+# 확인
+redis-cli ping
+# 응답: PONG
+```
+
+#### 6. 서버 실행
 ```bash
 # 개발 모드
 npm run dev
@@ -98,15 +129,48 @@ npm run dev
 npm start
 ```
 
-### 6. 테스트 실행
+서버 접속: http://localhost:3000
+
+---
+
+### 2️⃣ Docker Compose로 실행 (권장)
+
+#### 1. 전체 스택 시작
 ```bash
-npm test
+# 모든 서비스 시작 (MySQL, Redis, App)
+docker compose up -d --build
+
+# 상태 확인
+docker compose ps
+
+# 로그 확인
+docker compose logs -f app
 ```
 
-서버 실행 확인:
+#### 2. 마이그레이션 & 시드
+```bash
+# 마이그레이션 실행
+docker compose exec app npx sequelize-cli db:migrate
+
+# 시드 데이터 실행
+docker compose exec app npx sequelize-cli db:seed:all
 ```
-http://localhost:3000/health
+
+#### 3. 서비스 관리
+```bash
+# 서비스 중지
+docker compose down
+
+# 볼륨까지 삭제 (데이터 초기화)
+docker compose down -v
+
+# 특정 서비스 재시작
+docker compose restart app
 ```
+
+서버 접속: http://localhost:3000
+
+---
 
 ---
 
@@ -247,10 +311,10 @@ USE bookstore;
 
 # 데이터베이스 확인
 SHOW TABLES;
-SELECT COUNT(*) FROM users;    # 20개
+SELECT COUNT(*) FROM users;    # 30개
 SELECT COUNT(*) FROM books;    # 100개
 SELECT COUNT(*) FROM orders;   # 50개
-SELECT COUNT(*) FROM reviews;  # 150개
+SELECT COUNT(*) FROM reviews;  # 50개
 ```
 
 ### 테이블 목록
@@ -374,15 +438,18 @@ Refresh Token DB에서 삭제
 
 ---
 
-## 📋 엔드포인트 목록 (총 47개)
+## 📋 엔드포인트 목록 (총 50개)
 
-### 인증 (Auth) - 4개
+### 인증 (Auth) - 7개
 | Method | URL | 설명 | 인증 | 권한 |
 |--------|-----|------|------|------|
 | POST | `/api/auth/signup` | 회원가입 | ❌ | - |
 | POST | `/api/auth/login` | 로그인 | ❌ | - |
 | POST | `/api/auth/refresh` | 토큰 갱신 | ❌ | - |
 | POST | `/api/auth/logout` | 로그아웃 | ✅ | USER |
+| GET | `/api/auth/google` | Google OAuth 시작 | ❌ | - |
+| GET | `/api/auth/google/callback` | Google OAuth 콜백 | ❌ | - |
+| POST | `/api/auth/firebase` | Firebase Auth 로그인 | ❌ | - |
 
 ### 사용자 (Users) - 5개
 | Method | URL | 설명 | 인증 | 권한 |
@@ -594,7 +661,11 @@ Time:        ~10s
 bookstore-backend/
 ├── .sequelizerc              # Sequelize CLI 설정
 ├── config/
-│   └── config.js             # DB 설정 (환경변수 기반)
+│   ├── config.js             # DB 설정 (환경변수 기반)
+│   ├── passport.js              # Passport.js (Google OAuth)
+│   ├── firebase.js              # Firebase Admin SDK
+│   ├── redis.js                 # Redis 클라이언트
+│   └── firebase-service-account.json  # Firebase 서비스 계정 키
 ├── docs/
 │   ├── swagger.js            # Swagger 설정
 │   ├── api-design.md         # API 설계 문서
@@ -770,7 +841,6 @@ Comment ─ CommentLike (1:N)
 - **단일 서버**: 수평 확장 불가
 - **로그 관리**: 중앙화된 로그 시스템 부재
 - **모니터링**: APM 도구 미연동
-- **Swagger 배포 제한**: HTTP 환경에서 Mixed Content 문제
 
 ---
 
